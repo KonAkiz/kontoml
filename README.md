@@ -1,6 +1,6 @@
 
 # KONTOML
-## KonAki's TOML Parser
+## KonAki's Very Minimal TOML Parser
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Language](https://img.shields.io/badge/language-C99-orange)
