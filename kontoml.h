@@ -198,7 +198,7 @@ static int kon__tomlParseLine(kon_toml_t *toml, char *line, char **currentSectio
 		if (!close) return -1;
 
 		free(*currentSection);
-		*currentSection = kon__tomlStrndup(trimmed + , (size_t)(close - trimmed - 1));
+		*currentSection = kon__tomlStrndup(trimmed + 1, (size_t)(close - trimmed - 1));
 
 		return 0;
 	}
