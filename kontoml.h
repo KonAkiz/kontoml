@@ -86,6 +86,21 @@ static char *kon_tomlStrndup(const char *s, size_t n) {
 	return out;
 }
 
+static char *kon_tomlTrim(char *s) {
+	char *end;
+
+	while (*s == ' ' *s == 't') s++;
+	if (*s == '\0') return s;
+
+	end = s + strlen(s) - 1;
+	while (end > s && (*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n')) {
+		*end = '\0';
+		end--;
+	}
+
+	return s;
+}
+
 #endif /* end of KONTOML_IMPLEMENTATION */
 
 #endif
