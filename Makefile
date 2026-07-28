@@ -10,19 +10,19 @@ include config.mk
 # SRC
 #
 
-SRC=main.c
+SRC=examples/test.c
 
 #
 # OBJS
 #
 
-OBJ=main.o
+OBJ=examples/test.o
 
 #
 # TARGET
 #
 
-TARGET=program
+TARGET=test
 
 .PHONY: test clean
 
