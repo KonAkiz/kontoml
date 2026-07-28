@@ -89,7 +89,7 @@ static char *kon__tomlStrndup(const char *s, size_t n) {
 static char *kon__tomlTrim(char *s) {
 	char *end;
 
-	while (*s == ' ' || *s == 't') s++;
+	while (*s == ' ' || *s == '\t') s++;
 	if (*s == '\0') return s;
 
 	end = s + strlen(s) - 1;
