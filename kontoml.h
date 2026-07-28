@@ -336,6 +336,21 @@ void kon_freeToml(kon_toml_t *toml) {
 	free(toml);
 }
 
+static kon_tomlEntry_t *kon__tomlFind(kon_toml_t *toml, const char *section, const char *key) {
+	if (!toml) return NULL;
+
+	const char *sec = section ? section : "";
+
+	for (int i = 0; i < toml->count; i++) {
+		kon_tomlEntry_t *e = &toml->entries[i];
+		if (strcmp(e->section, sec) == 0 && strcmp(e->key, key) == 0) {
+			return 0;
+		}
+	}
+
+	return NULL;
+}
+
 #endif /* END of KONTOML_IMPLEMENTATION */
 
 #endif
