@@ -34,6 +34,6 @@ typedef enum kon_tomlType {
 	konTomlInt,
 	konTomlFloat,
 	konTomlBool
-} kon_tomlType_T;
+} kon_tomlType_t;
 
 #endif
