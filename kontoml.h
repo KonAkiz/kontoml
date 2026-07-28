@@ -70,7 +70,7 @@ bool kon_tomlGetBool(kon_toml_t *toml, const char *section, const char *key, boo
 #include <ctype.h>
 #include <stdio.h>
 
-static char *kon_tomlStrdup(const char *s) {
+static char *kon__tomlStrdup(const char *s) {
 	size_t len = strlen(s) + 1;
 	char *out = malloc(len);
 	if (!out) return NULL;
@@ -78,7 +78,7 @@ static char *kon_tomlStrdup(const char *s) {
 	return out;
 }
 
-static char *kon_tomlStrndup(const char *s, size_t n) {
+static char *kon__tomlStrndup(const char *s, size_t n) {
 	char *out = malloc(n + 1);
 	if (!out) return NULL;
 	memcpy(out, s, n);
@@ -86,7 +86,7 @@ static char *kon_tomlStrndup(const char *s, size_t n) {
 	return out;
 }
 
-static char *kon_tomlTrim(char *s) {
+static char *kon__tomlTrim(char *s) {
 	char *end;
 
 	while (*s == ' ' *s == 't') s++;
