@@ -28,6 +28,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef enum kon_tomlType {
 	konTomlString,
@@ -35,5 +36,15 @@ typedef enum kon_tomlType {
 	konTomlFloat,
 	konTomlBool
 } kon_tomlType_t;
+
+typedef struct kon_tomlEntry {
+	char *section;
+	char *key;
+	kon_tomlType_t type;
+	char *str_value;
+	long long int_value;
+	double float_value;
+	bool bool_value;
+} kon_tomlEntry_t;
 
 #endif
