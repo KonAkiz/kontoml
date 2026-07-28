@@ -1,3 +1,4 @@
+#define KONTOML_IMPLEMENTATION
 #include "kontoml.h"
 
 #define EXIT_SUCCESS 0
