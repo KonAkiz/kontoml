@@ -55,6 +55,7 @@ typedef struct kon_toml {
 
 kon_toml_t *kon_parseToml(const char *text);
 kon_toml_t *kon_parseTomlFile(const char *path);
+void kon_freeToml(kon_toml_t *toml);
 
 const char *kon_tomlGetString(kon_toml_t *toml, const char *section, const char *key, const char *def);
 long long kon_tomlGetInt(kon_toml_t *toml, const char *section, const char *key, long long def);
