@@ -101,6 +101,23 @@ static char *kon__tomlTrim(char *s) {
 	return s;
 }
 
+static kon_tomlEntry_t *kon__tomlPushEntry(kon_toml_t *toml) {
+	if (toml->count == toml->capacity) {
+		int newCap = toml->capacity ? toml->capacity * 2 : 16;
+		kon_tomlEntry_t *tmp = realloc(toml->entries, (size_t)newCap * sizeof(kon_tomlEntry_t));
+		if (!tmp) return NULL;
+
+		toml->entries = tmp;
+		toml->capacity = newCap;
+	}
+
+	kon_tomlEntry_t *entry = &toml->entries[toml->count];
+	memset(entry, 0, sizeof(kon_tomlEntry_t));
+	toml->count++;
+
+	return entry;
+}
+
 #endif /* end of KONTOML_IMPLEMENTATION */
 
 #endif
