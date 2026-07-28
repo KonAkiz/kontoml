@@ -168,7 +168,7 @@ static int kon__tomlParseString(const char **p, char **out) {
 	}
 	s++;
 
-	buf[bi] = '\0\;
+	buf[bi] = '\0';
 	*out = buf;
 	*p = s;
 
