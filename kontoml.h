@@ -344,7 +344,7 @@ static kon_tomlEntry_t *kon__tomlFind(kon_toml_t *toml, const char *section, con
 	for (int i = 0; i < toml->count; i++) {
 		kon_tomlEntry_t *e = &toml->entries[i];
 		if (strcmp(e->section, sec) == 0 && strcmp(e->key, key) == 0) {
-			return 0;
+			return e;
 		}
 	}
 
