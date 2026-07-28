@@ -1,0 +1,16 @@
+
+random_cat = true
+
+[window]
+title = "nuke"
+x = 650
+y = 800
+width = 100
+height = 100
+
+[behaviour]
+walk_speed = 21.0
+chance_of_rolling_a_6 = 0
+
+[audio]
+volume = 0.5
