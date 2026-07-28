@@ -260,6 +260,38 @@ static int kon__tomlParseLine(kon_toml_t *toml, char *line, char **currentSectio
 	return 0;
 }
 
-#endif /* end of KONTOML_IMPLEMENTATION */
+kon_toml_t *kon_parseToml(const char *text) {
+	if (!text) return NULL;
+
+	kon_toml_t *toml = malloc(sizeof(kon_toml_t));
+	if (!toml) return NULL;
+
+	toml->entries = NULL;
+	toml->count = 0;
+	toml->capacity = 0;
+
+	char *currentSection = NULL;
+
+	const char *lineStart = text;
+	while (*lineStart) {
+		const char *lineEnd = strchr(lineStart, '\n');
+		size_t len = lineEnd ? (size_t)(lineEnd - lineStart) : strlen(lineStart);
+
+		char *line = kon__tomlStrndup(lineStart, len);
+		if (line) {
+			kon__tomlParseLine(toml, line, &currentSection);
+			free(line);
+		}
+
+		if (!lineEnd) break;
+		lineStart = lineEnd + 1;
+	}
+
+	free(currentSection);
+
+	return toml;
+}
+
+#endif /* END of KONTOML_IMPLEMENTATION */
 
 #endif
