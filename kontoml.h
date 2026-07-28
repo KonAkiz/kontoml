@@ -23,8 +23,8 @@
  * SOFTWARE.
  */
 
-#ifndef KONTIME_H
-#define KONTIME_H
+#ifndef KONTOML_H
+#define KONTOML_H
 
 #include <stdint.h>
 #include <stdlib.h>
