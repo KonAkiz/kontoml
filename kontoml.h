@@ -351,6 +351,12 @@ static kon_tomlEntry_t *kon__tomlFind(kon_toml_t *toml, const char *section, con
 	return NULL;
 }
 
+const char *kon_tomlGetString(kon_toml_t *toml, const char *section, const char *key, const char *def) {
+	kon_tomlEntry_t *e = kon__tomlFind(toml, section, key);
+	if (!e || e->type != konTomlString) return def;
+	return e->str_value;
+}
+
 #endif /* END of KONTOML_IMPLEMENTATION */
 
 #endif
