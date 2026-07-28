@@ -175,6 +175,19 @@ static int kon__tomlParseString(const char **p, char **out) {
 	return 0;
 }
 
+static char *kon__tomlStripUnderscores(const char *s) {
+	char *out = malloc(strlen(s) + 1);
+	if (!out) return NULL;
+
+	size_t oi = 0;
+	for (size_t i = 0; s[i]; i++) {
+		if (s[i] != '_') out[oi++] = s[i];
+	}
+	out[oi] = '\0';
+
+	return out;
+}
+
 #endif /* end of KONTOML_IMPLEMENTATION */
 
 #endif
