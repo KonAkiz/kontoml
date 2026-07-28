@@ -292,6 +292,35 @@ kon_toml_t *kon_parseToml(const char *text) {
 	return toml;
 }
 
+kon_toml_t *kon_parseTomlFile(const char *path) {
+	FILE *f = fopen(path, "rb");
+	if (!f) return NULL;
+
+	fseek(f, 0, SEEK_END);
+	long size = ftell(f);
+	fseek(f, 0, SEEK_SET);
+
+	if (size < 0) {
+		fclose(f);
+		return NULL;
+	}
+
+	char *buf = malloc((size_t)size + 1);
+	if (!buf) {
+		fclose(f);
+		return NULL;
+	}
+
+	size_t read = fread(buf, 1, (size_t)size, f);
+	buf[read] = '\0';
+	fclose(f);
+
+	kon_toml_t *toml = kon_parseToml(buf);
+	free(buf);
+
+	return toml;
+}
+
 #endif /* END of KONTOML_IMPLEMENTATION */
 
 #endif
