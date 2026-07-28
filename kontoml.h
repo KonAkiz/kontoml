@@ -367,6 +367,16 @@ long long kon_tomlGetInt(kon_toml_t *toml, const char *section, const char *key,
 	return def;
 }
 
+double kon_tomlGetFloat(kon_toml_t *toml, const char *section, const char *key, double def) {
+	kon_tomlEntry_t *e = kon__tomlFind(toml, section, key);
+	if (!e) return def;
+
+	if (e->type == konTomlFloat) return e->float_value;
+	if (e->type == konTomlInt) return (double)e->int_value;
+
+	return def;
+}
+
 #endif /* END of KONTOML_IMPLEMENTATION */
 
 #endif
