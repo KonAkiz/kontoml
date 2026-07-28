@@ -22,7 +22,7 @@ OBJ=examples/test.o
 # TARGET
 #
 
-TARGET=test
+TARGET=test-file
 
 .PHONY: test clean
 
