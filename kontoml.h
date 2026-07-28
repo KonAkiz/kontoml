@@ -53,4 +53,12 @@ typedef struct kon_toml {
 	int capacity;
 } kon_toml_t;
 
+kon_toml_t *kon_parseToml(const char *text);
+kon_toml_t *kon_parseTomlFile(const char *path);
+
+const char *kon_tomlGetString(kon_toml_t *toml, const char *section, const char *key, const char *def);
+long long kon_tomlGetInt(kon_toml_t *toml, const char *section, const char *key, long long def);
+double kon_tomlGetFloat(kon_toml_t *toml, const char *section, const char *key, double def);
+bool kon_tomlGetBool(kon_toml_t *toml, const char *section, const char *key, bool def);
+
 #endif
