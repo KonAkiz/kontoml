@@ -29,6 +29,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-
+typedef enum kon_tomlType {
+	konTomlString,
+	konTomlInt,
+	konTomlFloat,
+	konTomlBool
+} kon_tomlType_T;
 
 #endif
