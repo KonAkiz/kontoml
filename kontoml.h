@@ -188,6 +188,78 @@ static char *kon__tomlStripUnderscores(const char *s) {
 	return out;
 }
 
+static int kon__tomlParseLine(kon_toml_t *toml, char *line, char **currentSection) {
+	char *trimmed = kon__tomlTrim(line);
+
+	if (*trimmed == '\0' || *trimmed == '#') return 0;
+
+	if (*trimmed == '[') {
+		char *close = strchr(trimmed, ']');
+		if (!close) return -1;
+
+		free(*currentSection);
+		*currentSection = kon__tomlStrndup(trimmed + , (size_t)(close - trimmed - 1));
+
+		return 0;
+	}
+
+	char *eq = strchr(trimmed, '=');
+	if (!eq) return -1;
+
+	*eq = '\0';
+	char *key = kon__tomlTrim(trimmed);
+	char *valueStr = kon__tomlTrim(eq + 1);
+
+	if (*valueStr != '"' && *valueStr != '\'') {
+		char *hash = strchr(valueStr, '#');
+		if (hash) {
+			*hash = '\0';
+			valueStr = kon__tomlTrim(valueStr);
+		}
+	}
+
+	if (*key == '\0' || *valueStr == '\0') return -1;
+
+	kon_toml_Entry_t *entry = kon__tomlPushEntry(toml);
+	if (!entry) return -1;
+
+	entry->section = *currentSection ? kon__tomlStrdup(*currentSection) : kon__tomlStrdup("");
+	entry->key = kon__tomlStrdup(key);
+
+	if (*valueStr == '"' || *valueStr == '\'') {
+		const char *vp = valueStr;
+		char *decoded = NULL;
+
+		if (kon__tomlParseString(&vp, &decoded) != 0) return -1;
+
+		entry->type = konTomlString;
+		entry->str_value = decoded;
+	} else if (strcmp(valueStr, "true") == 0) {
+		entry->type = konTomlBool;
+		entry->bool_value = true;
+	} else if (strcmp(valueStr, "false") == 0) {
+		entry->type = konTomlBool;
+		entry->bool_value = false;
+	} else {
+		char *clean = kon__tomlStripUnderscores(valueStr);
+		if (!clean) return -1;
+
+		int isFloat = (strchr(clean, '.') || strchr(clean, 'e') || strchr(clean, 'E'));
+
+		if (isFloat) {
+			entry->type = konTomlFloat;
+			entry->float_value = strtod(clean, NULL);
+		} else {
+			entry->type = konTomlInt;
+			entry->int_value = strtoll(clean, NULL, 10);
+		}
+
+		free(clean);
+	}
+
+	return 0;
+}
+
 #endif /* end of KONTOML_IMPLEMENTATION */
 
 #endif
