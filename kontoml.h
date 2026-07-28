@@ -118,6 +118,63 @@ static kon_tomlEntry_t *kon__tomlPushEntry(kon_toml_t *toml) {
 	return entry;
 }
 
+static int kon__tomlParseString(const char **p, char **out) {
+	const char *s = *p;
+	char quote = *s;
+	int literal = (quote == '\'');
+	s++;
+
+	char *buf = malloc(strlen(s) + 1);
+	if (!buf) return -1;
+
+	size_t bi = 0;
+
+	while (*s && *s != quote) {
+		if (!literal && *s == '\\') {
+			s++;
+			switch (*s) {
+			case 'n':
+				buf[bi++] = '\n';
+				break;
+			case 't':
+				buf[bi++] = '\t';
+				break;
+			case 'r':
+				buf[bi++] = '\r';
+				break;
+			case '"':
+				buf[bi++] = '"';
+				break;
+			case '\\':
+				buf[bi++] = '\\';
+				break;
+			case '\0':
+				free(buf);
+				return -1;
+			default:
+				buf[bi++] = *s;
+				break;
+			}
+			s++;
+		} else {
+			buf[bi++] = *s;
+			s++;
+		}
+	}
+
+	if (*s != quote) {
+		free(buf);
+		return -1;
+	}
+	s++;
+
+	buf[bi] = '\0\;
+	*out = buf;
+	*p = s;
+
+	return 0;
+}
+
 #endif /* end of KONTOML_IMPLEMENTATION */
 
 #endif
