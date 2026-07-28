@@ -62,4 +62,30 @@ long long kon_tomlGetInt(kon_toml_t *toml, const char *section, const char *key,
 double kon_tomlGetFloat(kon_toml_t *toml, const char *section, const char *key, double def);
 bool kon_tomlGetBool(kon_toml_t *toml, const char *section, const char *key, bool def);
 
+/*** implementation ***/
+
+#ifdef KONTOML_IMPLEMENTATION
+
+#include <string.h>
+#include <ctype.h>
+#include <stdio.h>
+
+static char *kon_tomlStrdup(const char *s) {
+	size_t len = strlen(s) + 1;
+	char *out = malloc(len);
+	if (!out) return NULL;
+	memcpy(out, s, len);
+	return out;
+}
+
+static char *kon_tomlStrndup(const char *s, size_t n) {
+	char *out = malloc(n + 1);
+	if (!out) return NULL;
+	memcpy(out, s, n);
+	out[n] = '\0';
+	return out;
+}
+
+#endif /* end of KONTOML_IMPLEMENTATION */
+
 #endif
