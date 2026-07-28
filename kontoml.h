@@ -321,6 +321,21 @@ kon_toml_t *kon_parseTomlFile(const char *path) {
 	return toml;
 }
 
+void kon_freeToml(kon_toml_t *toml) {
+	if (!toml) return;
+
+	for (int i = 0; i < toml->count; i++) {
+		free(toml->entries[i].section);
+		free(toml->entries[i].key);
+		if (toml->entries[i].type == konTomlString) {
+			free(toml->entries[i].str_value);
+		}
+	}
+
+	free(toml->entries);
+	free(toml);
+}
+
 #endif /* END of KONTOML_IMPLEMENTATION */
 
 #endif
