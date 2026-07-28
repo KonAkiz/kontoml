@@ -377,6 +377,12 @@ double kon_tomlGetFloat(kon_toml_t *toml, const char *section, const char *key, 
 	return def;
 }
 
+bool kon_tomlGetBool(kon_toml_t *toml, const char *section, const char *key, bool def) {
+	kon_tomlEntry_t *e = kon__tomlFind(toml, section, key);
+	if (!e || e->type != konTomlBool) return def;
+	return e->bool_value;
+}
+
 #endif /* END of KONTOML_IMPLEMENTATION */
 
 #endif
