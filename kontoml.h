@@ -47,4 +47,10 @@ typedef struct kon_tomlEntry {
 	bool bool_value;
 } kon_tomlEntry_t;
 
+typedef struct kon_toml {
+	kon_tomlEntry_t *entries;
+	int count;
+	int capacity;
+} kon_toml_t;
+
 #endif
