@@ -220,7 +220,7 @@ static int kon__tomlParseLine(kon_toml_t *toml, char *line, char **currentSectio
 
 	if (*key == '\0' || *valueStr == '\0') return -1;
 
-	kon_toml_Entry_t *entry = kon__tomlPushEntry(toml);
+	kon_tomlEntry_t *entry = kon__tomlPushEntry(toml);
 	if (!entry) return -1;
 
 	entry->section = *currentSection ? kon__tomlStrdup(*currentSection) : kon__tomlStrdup("");
