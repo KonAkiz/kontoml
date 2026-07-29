@@ -34,7 +34,8 @@ typedef enum kon_tomlType {
 	konTomlString,
 	konTomlInt,
 	konTomlFloat,
-	konTomlBool
+	konTomlBool,
+	konTomlArray
 } kon_tomlType_t;
 
 typedef struct kon_tomlEntry {
