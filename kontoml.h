@@ -201,6 +201,70 @@ static char *kon__tomlStripUnderscores(const char *s) {
 	return out;
 }
 
+static char **kon__tomlSplitArrayElements(const char *content, int *outCount) {
+	int cap = 8;
+	int count = 0;
+	char **elems = malloc((size_t)cap * sizeof(char *));
+	if (!elems) return NULL;
+
+	const char *start = content;
+	const char *p = content;
+	char inQuote = 0;
+
+	while (*p) {
+		if (inQuote) {
+			if (inQuote == '"' && *p == '\\' && *(p + 1) != '\0') {
+				p += 2;
+				continue;
+			}
+			if (*p == inQuote) inQuote = 0;
+			p++;
+			continue;
+		}
+
+		if (*p == '"' || *p == '\'') {
+			inQuote = *p;
+			p++;
+			continue;
+		}
+
+		if (*p == ',') {
+			if (count == cap) {
+				cap *= 2;
+				char **tmp = realloc(elems, (size_t)cap * sizeof(char *));
+				if (!tmp) { free(elems); return NULL; }
+				elems = tmp;
+			}
+			elems[count++] = kon__tomlStrndup(start, (size_t)(p - start));
+			p++;
+			start = p;
+			continue;
+		}
+
+		p++;
+	}
+
+	{
+		char *raw = kon__tomlStrndup(start, (size_t)(p - start));
+		char *checkTrim = raw ? kon__tomlTrim(raw) : NULL;
+
+		if (raw && *checkTrim != '\0') {
+			if (count == cap) {
+				cap += 1;
+				char **tmp = realloc(elems, (size_t)cap * sizeof(char *));
+				if (!tmp) { free(raw); free(elems); return NULL; }
+				elems = tmp;
+			}
+			elems[count++] = raw;
+		} else {
+			free(raw);
+		}
+	}
+
+	*outCount = count;
+	return elems;
+}
+
 static int kon__tomlParseLine(kon_toml_t *toml, char *line, char **currentSection) {
 	char *trimmed = kon__tomlTrim(line);
 
