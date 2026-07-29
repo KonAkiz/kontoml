@@ -46,6 +46,13 @@ typedef struct kon_tomlEntry {
 	long long int_value;
 	double float_value;
 	bool bool_value;
+
+	kon_tomlType_t array_type;
+	int array_count;
+	char **array_str;
+	long long *array_int;
+	double *array_float;
+	bool *array_bool;
 } kon_tomlEntry_t;
 
 typedef struct kon_toml {
