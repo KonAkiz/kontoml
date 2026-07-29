@@ -70,6 +70,11 @@ long long kon_tomlGetInt(kon_toml_t *toml, const char *section, const char *key,
 double kon_tomlGetFloat(kon_toml_t *toml, const char *section, const char *key, double def);
 bool kon_tomlGetBool(kon_toml_t *toml, const char *section, const char *key, bool def);
 
+const char *const *kon_tomlGetStringArray(kon_toml_t *toml, const char *section, const char *key, int *out_count);
+const long long *kon_tomlGetIntArray(kon_toml_t *toml, const char *section, const char *key, int *out_count);
+const double *kon_tomlGetFloatArray(kon_toml_t *toml, const char *section, const char *key, int *out_count);
+const bool *kon_tomlGetBoolArray(kon_toml_t *toml, const char *section, const char *key, int *out_count);
+
 /*** implementation ***/
 
 #ifdef KONTOML_IMPLEMENTATION
