@@ -612,6 +612,16 @@ const char *const *kon_tomlGetStringArray(kon_toml_t *toml, const char *section,
 	return (const char *const *)e->array_str;
 }
 
+const long long *kon_tomlGetIntArray(kon_toml_t *toml, const char *section, const char *key, int *out_count) {
+	kon_tomlEntry_t *e = kon__tomlFind(toml, section, key);
+	if (!e || e->type != konTomlArray || e->array_type != konTomlInt) {
+		if (out_count) *out_count = 0;
+		return NULL;
+	}
+	if (out_count) *out_count = e->array_count;
+	return e->array_int;
+}
+
 #endif /* END of KONTOML_IMPLEMENTATION */
 
 #endif
