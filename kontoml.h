@@ -265,6 +265,135 @@ static char **kon__tomlSplitArrayElements(const char *content, int *outCount) {
 	return elems;
 }
 
+static int kon__tomlParseArrayValue(kon_tomlEntry_t *entry, const char *valueStr) {
+	const char *open  = strchr(valueStr, '[');
+	const char *close = strchr(valueStr, ']');
+	if (!open || !close || close <= open) return -1;
+
+	char *content = kon__tomlStrndup(open + 1, (size_t)(close - open - 1));
+	if (!content) return -1;
+
+	int rawCount = 0;
+	char **rawElems = kon__tomlSplitArrayElements(content, &rawCount);
+	free(content);
+	if (!rawElems) return -1;
+
+	if (rawCount == 0) {
+		free(rawElems);
+		entry->type = konTomlArray;
+		entry->array_type = konTomlInt;
+		entry->array_count = 0;
+		return 0;
+	}
+
+	kon_tomlType_t elemType = konTomlInt;
+	char **strArr = NULL;
+	long long *intArr = NULL;
+	double *floatArr = NULL;
+	bool *boolArr = NULL;
+	int ok = 1;
+
+	for (int i = 0; i < rawCount && ok; i++) {
+		char *trimmed = kon__tomlTrim(rawElems[i]);
+
+		kon_tomlType_t thisType;
+		char *decodedStr = NULL;
+		long long thisInt = 0;
+		double thisFloat = 0.0;
+		bool thisBool = false;
+
+		if (*trimmed == '"' || *trimmed == '\'') {
+			const char *vp = trimmed;
+			thisType = konTomlString;
+			if (kon__tomlParseString(&vp, &decodedStr) != 0) { ok = 0; break; }
+		} else if (strcmp(trimmed, "true") == 0) {
+			thisType = konTomlBool;
+			thisBool = true;
+		} else if (strcmp(trimmed, "false") == 0) {
+			thisType = konTomlBool;
+			thisBool = false;
+		} else {
+			char *clean = kon__tomlStripUnderscores(trimmed);
+			if (!clean) { ok = 0; break; }
+
+			int isFloat = (strchr(clean, '.') || strchr(clean, 'e') || strchr(clean, 'E'));
+			if (isFloat) {
+				thisType = konTomlFloat;
+				thisFloat = strtod(clean, NULL);
+			} else {
+				thisType = konTomlInt;
+				thisInt = strtoll(clean, NULL, 10);
+			}
+			free(clean);
+		}
+
+		if (i == 0) {
+			elemType = thisType;
+			switch (elemType) {
+			case konTomlString:
+				strArr = malloc((size_t)rawCount * sizeof(char *));
+				break;
+			case konTomlInt:
+				intArr = malloc((size_t)rawCount * sizeof(long long));
+				break;
+			case konTomlFloat:
+				floatArr = malloc((size_t)rawCount * sizeof(double));
+				break;
+			case konTomlBool:
+				boolArr = malloc((size_t)rawCount * sizeof(bool));
+				break;
+			default:
+				break;
+			}
+		} else if (thisType != elemType) {
+			free(decodedStr);
+			ok = 0;
+			break;
+		}
+
+		switch (elemType) {
+		case konTomlString:
+			strArr[i] = decodedStr;
+			break;
+		case konTomlInt:
+			intArr[i] = thisInt;
+			break;
+		case konTomlFloat:
+			floatArr[i] = thisFloat;
+			break;
+		case konTomlBool:
+			boolArr[i] = thisBool;
+			break;
+		}
+	}
+
+	for (int i = 0; i < rawCount; i++) free(rawElems[i]);
+	free(rawElems);
+
+	if (!ok) {
+		if (strArr) {
+			for (int i = 0; i < rawCount; i++)
+				free(strArr[i]);
+
+			free(strArr);
+		}
+		free(intArr);
+		free(floatArr);
+		free(boolArr);
+		return -1;
+	}
+
+	entry->type = konTomlArray;
+	entry->array_type = elemType;
+	entry->array_count = rawCount;
+	entry->array_str = strArr;
+	entry->array_int = intArr;
+	entry->array_float = floatArr;
+	entry->array_bool = boolArr;
+
+	return 0;
+}
+
 static int kon__tomlParseLine(kon_toml_t *toml, char *line, char **currentSection) {
 	char *trimmed = kon__tomlTrim(line);
 
