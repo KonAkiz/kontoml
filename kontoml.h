@@ -432,7 +432,9 @@ static int kon__tomlParseLine(kon_toml_t *toml, char *line, char **currentSectio
 	entry->section = *currentSection ? kon__tomlStrdup(*currentSection) : kon__tomlStrdup("");
 	entry->key = kon__tomlStrdup(key);
 
-	if (*valueStr == '"' || *valueStr == '\'') {
+	if (*valueStr == '[') {
+		if (kon__tomlParseArrayValue(entry, valueStr) != 0) return -1;
+	} else if (*valueStr == '"' || *valueStr == '\'') {
 		const char *vp = valueStr;
 		char *decoded = NULL;
 
@@ -531,10 +533,21 @@ void kon_freeToml(kon_toml_t *toml) {
 	if (!toml) return;
 
 	for (int i = 0; i < toml->count; i++) {
-		free(toml->entries[i].section);
-		free(toml->entries[i].key);
-		if (toml->entries[i].type == konTomlString) {
-			free(toml->entries[i].str_value);
+		kon_tomlEntry_t *e = &toml->entries[i];
+
+		free(e->section);
+		free(e->key);
+
+		if (e->type == konTomlString) {
+			free(e->str_value);
+		} else if (e->type == konTomlArray) {
+			if (e->array_str) {
+				for (int j = 0; j < e->array_count; j++) free(e->array_str[j]);
+				free(e->array_str);
+			}
+			free(e->array_int);
+			free(e->array_float);
+			free(e->array_bool);
 		}
 	}
 
