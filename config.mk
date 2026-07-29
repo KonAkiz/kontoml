@@ -1,7 +1,7 @@
 
 CC=cc
 
-CFLAGS=-Wall -Wextra -pedantic -std=c99
+CFLAGS=-Wall -Wextra -Werror -pedantic -std=c99
 
 INC=-I.
 

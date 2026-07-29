@@ -364,6 +364,8 @@ static int kon__tomlParseArrayValue(kon_tomlEntry_t *entry, const char *valueStr
 		case konTomlBool:
 			boolArr[i] = thisBool;
 			break;
+		default:
+			break;
 		}
 	}
 
